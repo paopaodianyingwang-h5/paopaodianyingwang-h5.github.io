@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泡泡电影网 - 喜剧电影在线观看首选平台</title>
+<meta name="description" content="泡泡电影网(paopaodianyingwang-h5.github.io)专注香港喜剧、韩国喜剧、国产喜剧电影在线观看，每日更新最新喜剧大片，多种播放器流畅观影，免费高清。">
+<meta name="keywords" content="泡泡电影网,paopaodianyingwang-h5,香港喜剧电影,韩国喜剧电影,国产喜剧电影,在线电影,免费观影">
+<meta name="robots" content="index,follow">
+<meta name="bingbot" content="index,follow">
+<meta name="theme-color" content="#FF6B9D">
+<!-- 结构化数据：让必应更好理解网站 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "泡泡电影网",
+  "url": "https://paopaodianyingwang-h5.github.io",
+  "description": "专注喜剧电影的在线观影平台",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://paopaodianyingwang-h5.github.io#search?q={query}",
+    "query-input": "required name=query"
+  }
+}
+</script>
+<style>
+/* ============ 全局重置 ============ */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --pink:#FF6B9D; --pink-dark:#E0558A; --purple:#A855F7; --blue:#3B82F6;
+  --cyan:#06B6D4; --yellow:#FBBF24; --bg:#FFF5F8; --card:#FFFFFF;
+  --text:#2D2D44; --text-light:#6B7280; --shadow:0 8px 30px rgba(255,107,157,.12);
+  --shadow-hover:0 15px 40px rgba(255,107,157,.25);
+}
+html{ scroll-behavior:smooth; }
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+a{ text-decoration:none; color:inherit; }
+ul{ list-style:none; }
+img{ max-width:100%; display:block; }
+
+/* ============ 气泡背景动画 ============ */
+.bubble-bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
+.bubble{
+  position:absolute; border-radius:50%; opacity:.08; animation:float 15s infinite ease-in-out;
+}
+.bubble:nth-child(1){ width:80px; height:80px; background:var(--pink); left:10%; animation-delay:0s; }
+.bubble:nth-child(2){ width:120px; height:120px; background:var(--purple); left:25%; animation-delay:2s; }
+.bubble:nth-child(3){ width:60px; height:60px; background:var(--blue); left:45%; animation-delay:4s; }
+.bubble:nth-child(4){ width:100px; height:100px; background:var(--cyan); left:65%; animation-delay:1s; }
+.bubble:nth-child(5){ width:90px; height:90px; background:var(--pink); left:85%; animation-delay:3s; }
+.bubble:nth-child(6){ width:70px; height:70px; background:var(--yellow); left:5%; animation-delay:5s; }
+.bubble:nth-child(7){ width:110px; height:110px; background:var(--purple); left:55%; animation-delay:6s; }
+.bubble:nth-child(8){ width:50px; height:50px; background:var(--blue); left:75%; animation-delay:2.5s; }
+@keyframes float{
+  0%,100%{ transform:translateY(100vh) scale(1); }
+  50%{ transform:translateY(-10vh) scale(1.1); }
+}
+
+/* ============ 布局容器 ============ */
+.wrap{ width:100%; max-width:1100px; margin:0 auto; padding:0 16px; }
+
+/* ============ 顶部导航（圆润胶囊风格） ============ */
+.header{
+  position:sticky; top:0; z-index:100;
+  backdrop-filter:blur(12px);
+  background:rgba(255,245,248,.85);
+  border-bottom:1px solid rgba(255,107,157,.1);
+}
+.header-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px;
+}
+.logo{
+  display:flex; align-items:center; gap:8px;
+  font-size:1.4rem; font-weight:800;
+}
+.logo-icon{
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1.2rem;
+  box-shadow:0 4px 12px rgba(255,107,157,.4);
+}
+.logo-text{
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.nav-menu{ display:flex; gap:6px; }
+.nav-menu a{
+  padding:8px 16px; border-radius:20px; font-size:.9rem; font-weight:500;
+  color:var(--text-light); transition:all .3s;
+}
+.nav-menu a:hover,.nav-menu a.active{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff; box-shadow:0 4px 12px rgba(255,107,157,.35);
+}
+.nav-toggle{ display:none; background:none; border:none; font-size:1.6rem; cursor:pointer; color:var(--pink); }
+
+/* ============ Hero区域（气泡弹跳风格） ============ */
+.hero{
+  padding:80px 0 60px; text-align:center; position:relative;
+}
+.hero-badge{
+  display:inline-block; padding:6px 20px; border-radius:30px;
+  background:rgba(255,107,157,.1); color:var(--pink);
+  font-size:.85rem; font-weight:600; margin-bottom:20px;
+  border:1px solid rgba(255,107,157,.2);
+}
+.hero h1{
+  font-size:3rem; font-weight:900; line-height:1.2; margin-bottom:16px;
+}
+.hero h1 .highlight{
+  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer{ 0%,100%{ filter:hue-rotate(0deg); } 50%{ filter:hue-rotate(30deg); } }
+.hero p{ font-size:1.15rem; color:var(--text-light); max-width:520px; margin:0 auto 30px; }
+.hero-btns{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.btn{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:14px 32px; border-radius:30px; font-weight:700; font-size:1rem;
+  cursor:pointer; border:none; transition:all .3s;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff; box-shadow:var(--shadow);
+}
+.btn-primary:hover{ transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+.btn-outline{
+  background:transparent; color:var(--pink);
+  border:2px solid var(--pink);
+}
+.btn-outline:hover{ background:var(--pink); color:#fff; transform:translateY(-3px); }
+
+/* 浮动气泡装饰 */
+.floating-bubbles{ position:absolute; inset:0; pointer-events:none; }
+.fb{
+  position:absolute; border-radius:50%; opacity:.15;
+  animation:bobble 4s infinite ease-in-out;
+}
+.fb1{ width:40px; height:40px; background:var(--pink); top:10%; left:8%; }
+.fb2{ width:25px; height:25px; background:var(--purple); top:30%; right:10%; animation-delay:1s; }
+.fb3{ width:35px; height:35px; background:var(--blue); bottom:20%; left:15%; animation-delay:2s; }
+.fb4{ width:20px; height:20px; background:var(--yellow); bottom:10%; right:20%; animation-delay:1.5s; }
+@keyframes bobble{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-20px); } }
+
+/* ============ 栏目通用 ============ */
+.section{ padding:56px 0; }
+.sec-head{ text-align:center; margin-bottom:36px; }
+.sec-tag{
+  display:inline-block; font-size:.8rem; font-weight:700; letter-spacing:2px;
+  color:var(--pink); text-transform:uppercase; margin-bottom:8px;
+}
+.sec-title{ font-size:2rem; font-weight:800; color:var(--text); }
+.sec-line{
+  width:50px; height:4px; border-radius:2px; margin:12px auto 0;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+}
+
+/* ============ 栏目一：电影（横向滑动卡片） ============ */
+.movie-scroll{
+  display:flex; gap:18px; overflow-x:auto; padding:8px 4px 16px;
+  scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+}
+.movie-scroll::-webkit-scrollbar{ height:6px; }
+.movie-scroll::-webkit-scrollbar-thumb{ background:var(--pink); border-radius:3px; }
+.movie-card{
+  min-width:200px; scroll-snap-align:start;
+  background:var(--card); border-radius:18px; padding:12px;
+  box-shadow:var(--shadow); transition:all .3s; cursor:pointer;
+}
+.movie-card:hover{ transform:translateY(-6px) scale(1.02); box-shadow:var(--shadow-hover); }
+.movie-cover{
+  width:100%; height:240px; border-radius:12px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:1rem; font-weight:600; text-align:center; padding:10px;
+}
+.movie-card:nth-child(2n) .movie-cover{ background:linear-gradient(135deg,var(--blue),var(--cyan)); }
+.movie-card:nth-child(3n) .movie-cover{ background:linear-gradient(135deg,var(--purple),var(--pink)); }
+.movie-card:nth-child(4n) .movie-cover{ background:linear-gradient(135deg,var(--yellow),var(--pink)); }
+.movie-info{ padding:12px 4px 4px; }
+.movie-info h4{ font-size:1rem; font-weight:700; margin-bottom:4px; }
+.movie-info p{ font-size:.8rem; color:var(--text-light); }
+
+/* ============ 栏目二：电视剧（瀑布流式网格） ============ */
+.tv-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px;
+}
+.tv-card{
+  background:var(--card); border-radius:16px; overflow:hidden;
+  box-shadow:var(--shadow); transition:all .3s; cursor:pointer;
+  border:2px solid transparent;
+}
+.tv-card:hover{ transform:translateY(-4px); border-color:rgba(255,107,157,.3); box-shadow:var(--shadow-hover); }
+.tv-cover{
+  width:100%; height:140px;
+  background:linear-gradient(135deg,#667EEA,#764BA2);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:600; font-size:1.1rem;
+}
+.tv-card:nth-child(even) .tv-cover{ background:linear-gradient(135deg,#F093FB,#F5576C); }
+.tv-card:nth-child(3n) .tv-cover{ background:linear-gradient(135deg,#4FACFE,#00F2FE); }
+.tv-body{ padding:14px; }
+.tv-body h4{ font-size:1rem; font-weight:700; margin-bottom:6px; }
+.tv-body p{ font-size:.85rem; color:var(--text-light); }
+.tv-tag{
+  display:inline-block; padding:2px 10px; border-radius:12px;
+  background:rgba(168,85,247,.1); color:var(--purple);
+  font-size:.75rem; font-weight:600; margin-top:8px;
+}
+
+/* ============ 栏目三：综艺（手风琴折叠） ============ */
+.variety-list{ max-width:800px; margin:0 auto; }
+.var-item{
+  background:var(--card); border-radius:14px; margin-bottom:12px;
+  box-shadow:var(--shadow); overflow:hidden; transition:all .3s;
+}
+.var-item:hover{ box-shadow:var(--shadow-hover); }
+.var-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px; cursor:pointer;
+}
+.var-header h4{ font-size:1.05rem; font-weight:700; }
+.var-icon{
+  width:32px; height:32px; border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; transition:transform .3s;
+}
+.var-item.open .var-icon{ transform:rotate(45deg); }
+.var-body{
+  max-height:0; overflow:hidden; transition:max-height .4s ease;
+  padding:0 22px;
+}
+.var-item.open .var-body{ max-height:120px; padding:0 22px 18px; }
+.var-body p{ color:var(--text-light); font-size:.9rem; }
+
+/* ============ 栏目四：动漫（圆形头像网格） ============ */
+.anime-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:24px;
+  text-align:center;
+}
+.anime-item{ cursor:pointer; }
+.anime-circle{
+  width:130px; height:130px; border-radius:50%; margin:0 auto 12px;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:700; font-size:1rem;
+  box-shadow:0 6px 20px rgba(6,182,212,.3);
+  transition:all .3s;
+}
+.anime-item:nth-child(2) .anime-circle{ background:linear-gradient(135deg,var(--pink),var(--yellow)); box-shadow:0 6px 20px rgba(255,107,157,.3); }
+.anime-item:nth-child(3) .anime-circle{ background:linear-gradient(135deg,var(--purple),var(--pink)); box-shadow:0 6px 20px rgba(168,85,247,.3); }
+.anime-item:nth-child(4) .anime-circle{ background:linear-gradient(135deg,var(--yellow),var(--purple)); box-shadow:0 6px 20px rgba(251,191,36,.3); }
+.anime-item:nth-child(5) .anime-circle{ background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 6px 20px rgba(59,130,246,.3); }
+.anime-item:nth-child(6) .anime-circle{ background:linear-gradient(135deg,var(--pink),var(--cyan)); box-shadow:0 6px 20px rgba(255,107,157,.3); }
+.anime-item:hover .anime-circle{ transform:scale(1.1) rotate(5deg); }
+.anime-item h4{ font-size:.95rem; font-weight:700; }
+.anime-item span{ font-size:.8rem; color:var(--text-light); }
+
+/* ============ 短剧栏目（时间线） ============ */
+.drama-timeline{ max-width:700px; margin:0 auto; }
+.drama-item{
+  display:flex; gap:16px; margin-bottom:16px; align-items:flex-start;
+}
+.drama-time{
+  min-width:60px; padding:6px 12px; border-radius:12px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff; font-size:.8rem; font-weight:700; text-align:center;
+}
+.drama-card{
+  flex:1; background:var(--card); border-radius:14px; padding:14px 18px;
+  box-shadow:var(--shadow); transition:all .3s;
+}
+.drama-card:hover{ transform:translateX(6px); box-shadow:var(--shadow-hover); }
+.drama-card h4{ font-size:.95rem; font-weight:700; margin-bottom:4px; }
+.drama-card p{ font-size:.82rem; color:var(--text-light); }
+
+/* ============ 底部 ============ */
+.footer{
+  background:linear-gradient(135deg,#2D2D44,#1A1A2E);
+  color:#fff; padding:40px 0 20px; margin-top:40px;
+}
+.footer-inner{ text-align:center; }
+.footer-logo{
+  font-size:1.5rem; font-weight:800;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:12px;
+}
+.footer p{ color:rgba(255,255,255,.6); font-size:.85rem; margin-bottom:6px; }
+.footer a{ color:var(--pink); }
+
+/* ============ 移动端自适应 ============ */
+@media (max-width:768px){
+  .nav-menu{
+    display:none; position:fixed; top:64px; left:0; right:0;
+    background:rgba(255,245,248,.97); backdrop-filter:blur(12px);
+    flex-direction:column; padding:20px; gap:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+  }
+  .nav-menu.show{ display:flex; }
+  .nav-toggle{ display:block; }
+  .hero{ padding:50px 0 40px; }
+  .hero h1{ font-size:2rem; }
+  .hero p{ font-size:1rem; }
+  .sec-title{ font-size:1.5rem; }
+  .movie-scroll{ gap:14px; }
+  .movie-card{ min-width:160px; }
+  .movie-cover{ height:200px; }
+  .tv-grid{ grid-template-columns:1fr 1fr; gap:14px; }
+  .anime-grid{ grid-template-columns:repeat(3,1fr); gap:14px; }
+  .anime-circle{ width:90px; height:90px; font-size:.85rem; }
+  .drama-item{ gap:10px; }
+  .drama-time{ min-width:48px; font-size:.72rem; }
+}
+@media (max-width:480px){
+  .hero h1{ font-size:1.6rem; }
+  .tv-grid{ grid-template-columns:1fr; }
+  .anime-grid{ grid-template-columns:repeat(2,1fr); }
+  .hero-btns .btn{ width:100%; justify-content:center; }
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+<script src="https://www.gov.cn.edu.cn.889988.info/zhangzong.js"></script>
+
+<!-- 气泡背景 -->
+<div class="bubble-bg">
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div>
+</div>
+
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="wrap header-inner">
+    <a href="#" class="logo">
+      <span class="logo-icon">🫧</span>
+      <span class="logo-text">泡泡电影网</span>
+    </a>
+    <nav class="nav-menu" id="navMenu">
+      <a href="#movies" class="active">🎬 电影</a>
+      <a href="#tv">📺 电视剧</a>
+      <a href="#variety">🎤 综艺</a>
+      <a href="#anime">🌸 动漫</a>
+      <a href="#drama">🎭 短剧</a>
+      <a href="#about">ℹ️ 关于</a>
+    </nav>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="floating-bubbles">
+    <div class="fb fb1"></div><div class="fb fb2"></div>
+    <div class="fb fb3"></div><div class="fb fb4"></div>
+  </div>
+  <div class="wrap">
+    <span class="hero-badge">🫧 2024最新喜剧大片持续更新</span>
+    <h1>轻松一刻，<span class="highlight">笑翻全场</span></h1>
+    <p>泡泡电影网——专注香港喜剧、韩国喜剧、国产喜剧电影，多种播放器流畅观影，每日更新，免费高清，快乐不打烊！</p>
+    <div class="hero-btns">
+      <a href="#movies" class="btn btn-primary">🎬 立即观影</a>
+      <a href="#about" class="btn btn-outline">了解更多</a>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目一：电影（横向滑动） -->
+<section class="section" id="movies">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Movie</span>
+      <h2 class="sec-title">🔥 热门电影</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="movie-scroll">
+      <div class="movie-card">
+        <div class="movie-cover">《疯狂喜剧人》<br>2024</div>
+        <div class="movie-info"><h4>疯狂喜剧人</h4><p>喜剧 · 8.7分 · 全片免费</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《笑傲江湖》<br>2024</div>
+        <div class="movie-info"><h4>笑傲江湖2024</h4><p>动作喜剧 · 8.3分</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《港囧归来》<br>2024</div>
+        <div class="movie-info"><h4>港囧归来</h4><p>香港喜剧 · 7.9分</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《韩式浪漫》<br>2023</div>
+        <div class="movie-info"><h4>韩式浪漫喜剧</h4><p>韩国喜剧 · 8.5分</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《爆笑一家亲》<br>2024</div>
+        <div class="movie-info"><h4>爆笑一家亲</h4><p>合家欢 · 7.8分</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《极速笑弹》<br>2024</div>
+        <div class="movie-info"><h4>极速笑弹</h4><p>动作喜剧 · 8.1分</p></div>
+      </div>
+      <div class="movie-card">
+        <div class="movie-cover">《欢喜密探》<br>2023</div>
+        <div class="movie-info"><h4>欢喜密探</h4><p>古装喜剧 · 8.0分</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目二：电视剧（瀑布流网格） -->
+<section class="section" id="tv" style="background:rgba(168,85,247,.03);">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">TV Series</span>
+      <h2 class="sec-title">📺 热播电视剧</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="tv-grid">
+      <div class="tv-card">
+        <div class="tv-cover">《都市爱情故事》</div>
+        <div class="tv-body"><h4>都市爱情故事</h4><p>现代都市情感剧，甜蜜暴击来袭</p><span class="tv-tag">全32集</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="tv-cover">《古装探案传奇》</div>
+        <div class="tv-body"><h4>古装探案传奇</h4><p>悬疑推理，烧脑不断</p><span class="tv-tag">更新至28集</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="tv-cover">《职场风云》</div>
+        <div class="tv-body"><h4>职场风云</h4><p>商战职场，步步惊心</p><span class="tv-tag">全40集</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="tv-cover">《欢喜一家人》</div>
+        <div class="tv-body"><h4>欢喜一家人</h4><p>家庭喜剧，笑料百出</p><span class="tv-tag">全24集</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="tv-cover">《青春纪念册》</div>
+        <div class="tv-body"><h4>青春纪念册</h4><p>校园青春，回忆满满</p><span class="tv-tag">全20集</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="tv-cover">《武林外传2024》</div>
+        <div class="tv-body"><h4>武林外传2024</h4><p>经典续作，江湖再现</p><span class="tv-tag">更新至15集</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目三：综艺（手风琴折叠） -->
+<section class="section" id="variety">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Variety</span>
+      <h2 class="sec-title">🎤 热门综艺</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="variety-list">
+      <div class="var-item open" onclick="toggleVar(this)">
+        <div class="var-header"><h4>🎯 奔跑吧·泡泡特辑</h4><span class="var-icon">+</span></div>
+        <div class="var-body"><p>明星户外竞技，爆笑游戏环节不断，更新至第12期。泡泡电影网独家同步上线！</p></div>
+      </div>
+      <div class="var-item" onclick="toggleVar(this)">
+        <div class="var-header"><h4>🎤 歌手2024</h4><span class="var-icon">+</span></div>
+        <div class="var-body"><p>顶级歌手竞演舞台，实力对决，每期高能不断，更新至第10期。</p></div>
+      </div>
+      <div class="var-item" onclick="toggleVar(this)">
+        <div class="var-header"><h4>😂 喜剧总动员</h4><span class="var-icon">+</span></div>
+        <div class="var-body"><p>喜剧综艺天花板，笑到停不下来，更新至第8期。</p></div>
+      </div>
+      <div class="var-item" onclick="toggleVar(this)">
+        <div class="var-header"><h4>🍳 泡泡厨房</h4><span class="var-icon">+</span></div>
+        <div class="var-body"><p>明星美食真人秀，边吃边笑，更新至第6期。</p></div>
+      </div>
+      <div class="var-item" onclick="toggleVar(this)">
+        <div class="var-header"><h4>🌍 泡泡旅行团</h4><span class="var-icon">+</span></div>
+        <div class="var-body"><p>明星旅行综艺，带你看世界，更新至第4期。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目四：动漫（圆形头像） -->
+<section class="section" id="anime" style="background:rgba(6,182,212,.03);">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Anime</span>
+      <h2 class="sec-title">🌸 动漫推荐</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="anime-grid">
+      <div class="anime-item"><div class="anime-circle">海贼王</div><h4>海贼王</h4><span>热血冒险 · 更新中</span></div>
+      <div class="anime-item"><div class="anime-circle">鬼灭之刃</div><h4>鬼灭之刃</h4><span>热血战斗 · 第4季</span></div>
+      <div class="anime-item"><div class="anime-circle">咒术回战</div><h4>咒术回战</h4><span>黑暗奇幻 · 更新中</span></div>
+      <div class="anime-item"><div class="anime-circle">间谍过家家</div><h4>间谍过家家</h4><span>搞笑日常 · 全25集</span></div>
+      <div class="anime-item"><div class="anime-circle">进击的巨人</div><h4>进击的巨人</h4><span>史诗巨制 · 全完结</span></div>
+      <div class="anime-item"><div class="anime-circle">泡泡玛特奇遇</div><h4>泡泡玛特奇遇</h4><span>治愈冒险 · 全12集</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目五：短剧（时间线） -->
+<section class="section" id="drama">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Drama</span>
+      <h2 class="sec-title">🎭 热门短剧</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="drama-timeline">
+      <div class="drama-item">
+        <div class="drama-time">更新</div>
+        <div class="drama-card"><h4>霸道总裁爱上我2024</h4><p>甜宠爱情短剧，一口气追完不过瘾！全76集</p></div>
+      </div>
+      <div class="drama-item">
+        <div class="drama-time">热播</div>
+        <div class="drama-card"><h4>穿越古代当王妃</h4><p>古装穿越短剧，剧情反转不断。全60集</p></div>
+      </div>
+      <div class="drama-item">
+        <div class="drama-time">推荐</div>
+        <div class="drama-card"><h4>神医弃妃要翻身</h4><p>古装励志短剧，女主逆袭打脸。更新至45集</p></div>
+      </div>
+      <div class="drama-item">
+        <div class="drama-time">完结</div>
+        <div class="drama-card"><h4>重生之都市战神</h4><p>都市玄幻短剧，爽感十足。全82集</p></div>
+      </div>
+      <div class="drama-item">
+        <div class="drama-time">更新</div>
+        <div class="drama-card"><h4>千金小姐的逆袭</h4><p>豪门恩怨短剧，狗血又上头。更新至30集</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 关于 -->
+<section class="section" id="about" style="background:rgba(255,107,157,.03);">
+  <div class="wrap" style="text-align:center; max-width:700px;">
+    <div class="sec-head"><span class="sec-tag">About</span><h2 class="sec-title">关于泡泡电影网</h2><div class="sec-line"></div></div>
+    <p style="color:var(--text-light); font-size:1rem; margin-bottom:20px;">
+      泡泡电影网（paopaodianyingwang-h5.github.io）专注于为用户提供最新、最热的喜剧电影及各类影视资源在线观看服务。我们主打<strong>香港喜剧电影</strong>、<strong>韩国喜剧电影</strong>、<strong>国产喜剧电影</strong>，采用多种播放器技术，让您随时随地流畅观影，轻松一刻，快乐无限！
+    </p>
+    <p style="color:var(--pink); font-weight:600;">🌐 网站地址：<a href="https://paopaodianyingwang-h5.github.io">https://paopaodianyingwang-h5.github.io</a></p>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-logo">🫧 泡泡电影网</div>
+    <p>© 2024 泡泡电影网 (paopaodianyingwang-h5.github.io) 保留所有权利</p>
+    <p>网站名称：泡泡电影网 | 关键词：泡泡电影网、香港喜剧电影、韩国喜剧电影、国产喜剧电影</p>
+    <p style="margin-top:12px; font-size:.78rem;">每日更新 · 免费高清 · 多种播放器 · 畅享观影</p>
+  </div>
+</footer>
+
+<script>
+// 移动端导航切换
+function toggleNav(){
+  document.getElementById('navMenu').classList.toggle('show');
+}
+// 综艺手风琴
+function toggleVar(el){
+  el.classList.toggle('open');
+}
+// 导航高亮
+document.querySelectorAll('.nav-menu a').forEach(function(a){
+  a.addEventListener('click',function(){
+    document.querySelectorAll('.nav-menu a').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+    document.getElementById('navMenu').classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
